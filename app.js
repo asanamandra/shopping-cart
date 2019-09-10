@@ -4,7 +4,8 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
 const mongoose = require("mongoose");
-var encrypt = require('mongoose-encryption');
+
+const md5 = require("md5");
 
 const app = express();
 
@@ -32,9 +33,6 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const secret = "Thisistheencryptionsecret.";
-userSchema.plugin(encrypt, {secret: secret, encryptedFields: ['password'] });
-// userSchema.plugin(encrypt, { encryptionKey: secret, signingKey: sigKey, excludeFromEncryption: ['age'] });
 
 
 const User = new mongoose.model("User", userSchema);
@@ -46,7 +44,7 @@ app.route("/")
 .post(function(req,res){
 
   const email = req.body.email;
-  const password = req.body.password;
+  const password = md5(req.body.password);
   User.count({email: req.body.email},function(err,count){
       if(count>0)
       {
@@ -88,7 +86,7 @@ app.route("/signup")
         const newUser = new User({
           email: req.body.email,
           name: req.body.name,
-          password: req.body.password
+          password: md5(req.body.password)
         });
         newUser.save(function(err){
 
@@ -143,7 +141,7 @@ User.count({email: req.body.email},function(err,count){
       const newUser = new User({
         email: req.body.email,
         name: req.body.name,
-        password: req.body.password
+        password: md5(req.body.password)
       });
       newUser.save(function(err){
 
@@ -206,7 +204,7 @@ app.route("/users/:userEmail")
     {
       User.update(
         {email: requestedEmail},
-        {email: req.body.email, name: req.body.name, password: req.body.password},
+        {email: req.body.email, name: req.body.name, password: md5(req.body.password)},
         {overwrite: true},
         function(err){
           if(!err){
