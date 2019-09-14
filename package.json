@@ -12,12 +12,20 @@
     "node": "10.15.1"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^8.1.0",
     "ejs": "^2.7.1",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
+    "express-validator": "^6.2.0",
     "lodash": "^4.17.15",
     "md5": "^2.2.1",
     "mongoose": "^5.6.13",
-    "mongoose-encryption": "^2.0.2"
+    "mongoose-encryption": "^2.0.2",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.1"
   }
 }
