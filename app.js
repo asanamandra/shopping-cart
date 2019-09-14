@@ -35,10 +35,10 @@ app.use(passport.session());
 app.use(flash());
 
 const password = process.env.DB_PASS;
-// mongoose.connect("mongodb+srv://admin-allen:" + password + "@cluster0-5gksb.mongodb.net/loginDB", {
-//   useNewUrlParser: true
-// });
-mongoose.connect("mongodb://localhost:27017/loginDB", {useNewUrlParser: true});
+mongoose.connect("mongodb+srv://admin-allen:" + password + "@cluster0-5gksb.mongodb.net/loginDB", {
+  useNewUrlParser: true
+});
+// mongoose.connect("mongodb://localhost:27017/loginDB", {useNewUrlParser: true});
 //deprecation warning
 mongoose.set("useCreateIndex", true);
 
