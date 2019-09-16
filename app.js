@@ -34,8 +34,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-const password = process.env.DB_PASS;
-mongoose.connect("mongodb+srv://admin-allen:"+ process.env.DB_PASS+"@cluster0-5gksb.mongodb.net/loginDB");
+mongoose.connect("mongodb+srv://admin-allen:"+ process.env.DB_PASS+"@cluster0-5gksb.mongodb.net/loginDB",{useNewUrlParser: true});
 // mongoose.connect("mongodb://localhost:27017/loginDB", {useNewUrlParser: true});
 //deprecation warning
 mongoose.set("useCreateIndex", true);
@@ -299,8 +298,8 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 8000;
 }
-app.listen(port);
+// app.listen(port);
 
-// app.listen(port, function() {
-//   console.log("server started successfully");
-// });
+app.listen(port, function() {
+  console.log("server started successfully");
+});
