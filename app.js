@@ -9,7 +9,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const flash = require('connect-flash');
-
+var Cart = require('./models/welcome.js');
 
 // const bcrypt = require('bcrypt');
 // const md5 = require("md5");
@@ -30,6 +30,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -68,6 +69,11 @@ const Item = new mongoose.model("Item", itemsSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+app.use(function(req,res,next){
+  // res.locals.login=req.isAuthenticated();
+  res.locals.session = req.session;
+  next();
+});
 
 app.route("/items")
 .get(function(req,res){
@@ -117,6 +123,7 @@ app.route("/")
   app.route("/logout")
   .get( function(req, res){
   req.logout();
+  // console.log(req.session.cart.totalPrice);
   res.redirect('/');
 });
   app.route("/welcome")
@@ -154,6 +161,16 @@ app.route("/signup")
       });
 
     });
+app.route("/shopping-cart")
+
+.get(function(req,res){
+  if(! req.session.cart)
+  {
+    return res.render("shopping-cart", {products:null});
+  }
+  var cart = new Cart(req.session.cart);
+  res.render("shopping-cart", {products: cart.generateArray(), totalPrice: cart.totalPrice});
+});
 app.route("/users")
   .get(function(req, res) {
     User.find({}, function(err, foundUsers) {
@@ -291,6 +308,21 @@ app.route("/users/:username")
       } else {
         res.send("Email does not exist");
       }
+    });
+  });
+  app.route("/add-to-cart/:id")
+  .get(function(req,res){
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+    Item.findById(productId, function(err, product){
+      if(err){
+        console.log(err);
+      }
+      cart.add(product, product.id);
+      req.session.cart = cart;
+      // console.log(req.session.cart);
+      res.redirect('/welcome');
     });
   });
 
