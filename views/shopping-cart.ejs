@@ -71,9 +71,9 @@
         <p><%=product.qty%></p>
       </div>
       <div class="product-removal">
-        <button class="remove-product">
+        <a href="/reduce/<%=product.item._id%>" class="remove-product">
           Remove
-        </button>
+        </a>
       </div>
       <div class="product-line-price"><%=product.price%></div>
     </div>

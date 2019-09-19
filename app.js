@@ -9,7 +9,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const flash = require('connect-flash');
-var Cart = require('./models/welcome.js');
+var Cart = require('./models/cart.js');
 
 // const bcrypt = require('bcrypt');
 // const md5 = require("md5");
@@ -324,6 +324,15 @@ app.route("/users/:username")
       // console.log(req.session.cart);
       res.redirect('/welcome');
     });
+  });
+  app.route("/reduce/:id")
+  .get(function(req,res){
+    var productId = req.params.id;
+    var cart = new Cart(req.session.cart ? req.session.cart : {});
+
+    cart.reduceByOne(productId);
+    req.session.cart = cart;
+    res.redirect("/shopping-cart");
   });
 
 let port = process.env.PORT;
